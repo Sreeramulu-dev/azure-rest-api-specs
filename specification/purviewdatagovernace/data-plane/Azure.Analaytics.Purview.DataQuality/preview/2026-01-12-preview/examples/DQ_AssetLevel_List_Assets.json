@@ -6,7 +6,7 @@
     "dataProductId": "00000000-0000-0000-0000-000000000000",
     "continuationToken": null
   },
-  "title": "DQAssets_List_V2",
+  "title": "DQ_AssetLevel_List_Assets",
   "responses": {
     "200": {
       "body": {

@@ -13,7 +13,7 @@
       "targetDataProductId": "423e4567-e89b-12d3-a456-426614174333"
     }
   },
-  "title": "DQAsset_Clone_V2",
+  "title": "DQ_AssetLevel_Clone_Assest",
   "responses": {
     "202": {
       "body": {
