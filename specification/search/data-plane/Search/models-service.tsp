@@ -1,10 +1,12 @@
 import "@typespec/rest";
 import "@typespec/http";
+import "@typespec/versioning";
 import "@azure-tools/typespec-azure-core";
 import "@azure-tools/typespec-client-generator-core";
 import "./models-shared.tsp";
 
 using Azure.ClientGenerator.Core.Legacy;
+using TypeSpec.Versioning;
 
 namespace Search;
 
@@ -748,7 +750,7 @@ union CharFilterName {
   HtmlStrip: "html_strip",
 }
 
-/** Defines flags that can be combined to control how regular expressions are used in the pattern analyzer and pattern tokenizer. */
+/** Defines a regular expression flag that can be used in the pattern analyzer and pattern tokenizer. */
 union RegexFlags {
   string,
 
@@ -816,21 +818,27 @@ union AzureOpenAIModelName {
   TextEmbedding3Small: "text-embedding-3-small",
 
   /** Gpt4o model. */
+  @removed(Versions.v2026_04_01)
   Gpt4o: "gpt-4o",
 
   /** Gpt4oMini model. */
+  @removed(Versions.v2026_04_01)
   Gpt4oMini: "gpt-4o-mini",
 
   /** Gpt41 model. */
+  @removed(Versions.v2026_04_01)
   Gpt41: "gpt-4.1",
 
   /** Gpt41Mini model. */
+  @removed(Versions.v2026_04_01)
   Gpt41Mini: "gpt-4.1-mini",
 
   /** Gpt41Nano model. */
+  @removed(Versions.v2026_04_01)
   Gpt41Nano: "gpt-4.1-nano",
 
   /** Gpt5 model. */
+  @removed(Versions.v2026_04_01)
   Gpt5: "gpt-5",
 
   /** Gpt5Mini model. */
@@ -838,6 +846,14 @@ union AzureOpenAIModelName {
 
   /** Gpt5Nano model. */
   Gpt5Nano: "gpt-5-nano",
+
+  /** Gpt54Mini model. */
+  @added(Versions.v2026_04_01)
+  Gpt54Mini: "gpt-5.4-mini",
+
+  /** Gpt54Nano model. */
+  @added(Versions.v2026_04_01)
+  Gpt54Nano: "gpt-5.4-nano",
 }
 
 /** The name of the embedding model from the Azure AI Foundry Catalog that will be called. */
@@ -845,10 +861,10 @@ union AIFoundryModelCatalogName {
   string,
 
   /** OpenAI-CLIP-Image-Text-Embeddings-vit-base-patch32 */
-  OpenAICLIPImageTextEmbeddingsVitBasePatch32: "OpenAI-CLIP-Image-Text-Embeddings-vit-base-patch32",
+  OpenAiClipImageTextEmbeddingsVitBasePatch32: "OpenAI-CLIP-Image-Text-Embeddings-vit-base-patch32",
 
   /** OpenAI-CLIP-Image-Text-Embeddings-ViT-Large-Patch14-336 */
-  OpenAICLIPImageTextEmbeddingsViTLargePatch14336: "OpenAI-CLIP-Image-Text-Embeddings-ViT-Large-Patch14-336",
+  OpenAiClipImageTextEmbeddingsViTLargePatch14_336: "OpenAI-CLIP-Image-Text-Embeddings-ViT-Large-Patch14-336",
 
   /** Facebook-DinoV2-Image-Embeddings-ViT-Base */
   FacebookDinoV2ImageEmbeddingsViTBase: "Facebook-DinoV2-Image-Embeddings-ViT-Base",
@@ -1675,7 +1691,7 @@ union EntityCategory {
   Email: "email",
 }
 
-/** Deprecated. The language codes supported for input text by EntityRecognitionSkill. */
+/** The language codes supported for input text by EntityRecognitionSkill. */
 union EntityRecognitionSkillLanguage {
   string,
 
@@ -1749,7 +1765,18 @@ union EntityRecognitionSkillLanguage {
   tr: "tr",
 }
 
-/** Deprecated. The language codes supported for input text by SentimentSkill. */
+/** A string indicating what maskingMode to use to mask the personal information detected in the input text. */
+union PIIDetectionSkillMaskingMode {
+  string,
+
+  /** No masking occurs and the maskedText output will not be returned. */
+  None: "none",
+
+  /** Replaces the detected entities with the character given in the maskingCharacter parameter. The character will be repeated to the length of the detected entity so that the offsets will correctly correspond to both the input text as well as the output maskedText. */
+  Replace: "replace",
+}
+
+/** The language codes supported for input text by SentimentSkill. */
 union SentimentSkillLanguage {
   string,
 
@@ -1797,17 +1824,6 @@ union SentimentSkillLanguage {
 
   /** Turkish */
   tr: "tr",
-}
-
-/** A string indicating what maskingMode to use to mask the personal information detected in the input text. */
-union PIIDetectionSkillMaskingMode {
-  string,
-
-  /** No masking occurs and the maskedText output will not be returned. */
-  None: "none",
-
-  /** Replaces the detected entities with the character given in the maskingCharacter parameter. The character will be repeated to the length of the detected entity so that the offsets will correctly correspond to both the input text as well as the output maskedText. */
-  Replace: "replace",
 }
 
 /** The language codes supported for input text by SplitSkill. */
@@ -2268,9 +2284,8 @@ union DocumentIntelligenceLayoutSkillChunkingUnit {
 }
 
 /** Represents the overall indexer status. */
+#suppress "@azure-tools/typespec-azure-core/no-closed-literal-union" "Closed enum by design"
 union IndexerStatus {
-  string,
-
   /** Indicates that the indexer is in an unknown state. */
   Unknown: "unknown",
 
@@ -2282,9 +2297,8 @@ union IndexerStatus {
 }
 
 /** Represents the status of an individual indexer execution. */
+#suppress "@azure-tools/typespec-azure-core/no-closed-literal-union" "Closed enum by design"
 union IndexerExecutionStatus {
-  string,
-
   /** An indexer invocation has failed, but the failure may be transient. Indexer invocations will continue per schedule. */
   TransientFailure: "transientFailure",
 
@@ -2299,9 +2313,8 @@ union IndexerExecutionStatus {
 }
 
 /** Defines the function used to interpolate score boosting across a range of documents. */
+#suppress "@azure-tools/typespec-azure-core/no-closed-literal-union" "Closed enum by design"
 union ScoringFunctionInterpolation {
-  string,
-
   /** Boosts scores by a linearly decreasing amount. This is the default interpolation for scoring functions. */
   Linear: "linear",
 
@@ -2316,9 +2329,8 @@ union ScoringFunctionInterpolation {
 }
 
 /** Defines the aggregation function used to combine the results of all the scoring functions in a scoring profile. */
+#suppress "@azure-tools/typespec-azure-core/no-closed-literal-union" "Closed enum by design"
 union ScoringFunctionAggregation {
-  string,
-
   /** Boost scores by the sum of all scoring function results. */
   Sum: "sum",
 
@@ -2339,9 +2351,8 @@ union ScoringFunctionAggregation {
 }
 
 /** Represents classes of characters on which a token filter can operate. */
+#suppress "@azure-tools/typespec-azure-core/no-closed-literal-union" "Closed enum by design"
 union TokenCharacterKind {
-  string,
-
   /** Keeps letters in tokens. */
   Letter: "letter",
 
@@ -2359,9 +2370,8 @@ union TokenCharacterKind {
 }
 
 /** Lists the languages supported by the Microsoft language tokenizer. */
+#suppress "@azure-tools/typespec-azure-core/no-closed-literal-union" "Closed enum by design"
 union MicrosoftTokenizerLanguage {
-  string,
-
   /** Selects the Microsoft tokenizer for Bangla. */
   Bangla: "bangla",
 
@@ -2490,9 +2500,8 @@ union MicrosoftTokenizerLanguage {
 }
 
 /** Lists the languages supported by the Microsoft language stemming tokenizer. */
+#suppress "@azure-tools/typespec-azure-core/no-closed-literal-union" "Closed enum by design"
 union MicrosoftStemmingTokenizerLanguage {
-  string,
-
   /** Selects the Microsoft stemming tokenizer for Arabic. */
   Arabic: "arabic",
 
@@ -2630,9 +2639,8 @@ union MicrosoftStemmingTokenizerLanguage {
 }
 
 /** Scripts that can be ignored by CjkBigramTokenFilter. */
+#suppress "@azure-tools/typespec-azure-core/no-closed-literal-union" "Closed enum by design"
 union CjkBigramTokenFilterScripts {
-  string,
-
   /** Ignore Han script when forming bigrams of CJK terms. */
   Han: "han",
 
@@ -2647,9 +2655,8 @@ union CjkBigramTokenFilterScripts {
 }
 
 /** Specifies which side of the input an n-gram should be generated from. */
+#suppress "@azure-tools/typespec-azure-core/no-closed-literal-union" "Closed enum by design"
 union EdgeNGramTokenFilterSide {
-  string,
-
   /** Specifies that the n-gram should be generated from the front of the input. */
   Front: "front",
 
@@ -2658,9 +2665,8 @@ union EdgeNGramTokenFilterSide {
 }
 
 /** Identifies the type of phonetic encoder to use with a PhoneticTokenFilter. */
+#suppress "@azure-tools/typespec-azure-core/no-closed-literal-union" "Closed enum by design"
 union PhoneticEncoder {
-  string,
-
   /** Encodes a token into a Metaphone value. */
   Metaphone: "metaphone",
 
@@ -2696,9 +2702,8 @@ union PhoneticEncoder {
 }
 
 /** The language to use for a Snowball token filter. */
+#suppress "@azure-tools/typespec-azure-core/no-closed-literal-union" "Closed enum by design"
 union SnowballTokenFilterLanguage {
-  string,
-
   /** Selects the Lucene Snowball stemming tokenizer for Armenian. */
   Armenian: "armenian",
 
@@ -2767,9 +2772,8 @@ union SnowballTokenFilterLanguage {
 }
 
 /** The language to use for a stemmer token filter. */
+#suppress "@azure-tools/typespec-azure-core/no-closed-literal-union" "Closed enum by design"
 union StemmerTokenFilterLanguage {
-  string,
-
   /** Selects the Lucene stemming tokenizer for Arabic. */
   Arabic: "arabic",
 
@@ -2934,9 +2938,8 @@ union StemmerTokenFilterLanguage {
 }
 
 /** Identifies a predefined list of language-specific stopwords. */
+#suppress "@azure-tools/typespec-azure-core/no-closed-literal-union" "Closed enum by design"
 union StopwordsList {
-  string,
-
   /** Selects the stopword list for Arabic. */
   Arabic: "arabic",
 
@@ -3046,6 +3049,7 @@ union IndexerPermissionOption {
 }
 
 /** A value indicating whether the field should be used as a permission filter. */
+@removed(Versions.v2026_04_01)
 union PermissionFilter {
   string,
 
@@ -3060,13 +3064,14 @@ union PermissionFilter {
 }
 
 /** A value indicating whether permission filtering is enabled for the index. */
+@removed(Versions.v2026_04_01)
 union SearchIndexPermissionFilterOption {
   string,
 
-  /** enabled. */
+  /** Permission filtering is enabled for the index. */
   Enabled: "enabled",
 
-  /** disabled. */
+  /** Permission filtering is disabled for the index. */
   Disabled: "disabled",
 }
 
@@ -3075,7 +3080,7 @@ union ChatCompletionExtraParametersBehavior {
   string,
 
   /** Passes any extra parameters directly to the model. */
-  PassThrough: "pass-through",
+  PassThrough: "passThrough",
 
   /** Drops all extra parameters. */
   Drop: "drop",
@@ -3137,6 +3142,7 @@ model SearchIndexerDataSource {
 
   /** A specific type of the data source, in case the resource is capable of different modalities. For example, 'MongoDb' for certain 'cosmosDb' accounts. */
   @visibility(Lifecycle.Read)
+  @removed(Versions.v2026_04_01)
   subType?: string;
 
   /** Credentials for the datasource. */
@@ -3153,6 +3159,7 @@ model SearchIndexerDataSource {
 
   /** Ingestion options with various types of permission data. */
   #suppress "@azure-tools/typespec-azure-core/no-nullable" "Pre-existing API contract"
+  @removed(Versions.v2026_04_01)
   indexerPermissionOptions?: IndexerPermissionOption[] | null;
 
   /** The data change detection policy for the datasource. */
@@ -3297,6 +3304,7 @@ model SearchIndexer {
 
   /** Adds caching to an enrichment pipeline to allow for incremental modification steps without having to rebuild the index every time. */
   #suppress "@azure-tools/typespec-azure-core/no-nullable" "Pre-existing API contract"
+  @removed(Versions.v2026_04_01)
   cache?: SearchIndexerCache | null;
 }
 
@@ -3415,6 +3423,7 @@ model FieldMappingFunction {
 }
 
 /** The type of the cache. */
+@removed(Versions.v2026_04_01)
 model SearchIndexerCache {
   /** A guid for the SearchIndexerCache. */
   id?: string;
@@ -3450,6 +3459,7 @@ model SearchIndexerStatus {
   status: IndexerStatus;
 
   /** Snapshot of the indexer's cumulative runtime consumption for the service over the current UTC period. */
+  @removed(Versions.v2026_04_01)
   @visibility(Lifecycle.Read)
   runtime: IndexerRuntime;
 
@@ -3466,6 +3476,7 @@ model SearchIndexerStatus {
   limits: SearchIndexerLimits;
 
   /** All of the state that defines and dictates the indexer's current execution. */
+  @removed(Versions.v2026_04_01)
   @visibility(Lifecycle.Read)
   currentState?: IndexerCurrentState;
 }
@@ -3477,10 +3488,12 @@ model IndexerExecutionResult {
   status: IndexerExecutionStatus;
 
   /** The outcome of this indexer execution. */
+  @removed(Versions.v2026_04_01)
   @visibility(Lifecycle.Read)
   statusDetail?: IndexerExecutionStatusDetail;
 
   /** The mode the indexer is running in. */
+  @removed(Versions.v2026_04_01)
   @visibility(Lifecycle.Read)
   mode?: IndexingMode;
 
@@ -3746,6 +3759,7 @@ model SearchIndexerKnowledgeStore {
 
   /** A dictionary of knowledge store-specific configuration properties. Each name is the name of a specific property. Each value must be of a primitive type. */
   #suppress "@azure-tools/typespec-azure-core/bad-record-type" "model should have additionalProperties"
+  @removed(Versions.v2026_04_01)
   parameters?: SearchIndexerKnowledgeStoreParameters;
 }
 
@@ -3944,10 +3958,81 @@ model SearchIndex {
 
   /** A value indicating whether permission filtering is enabled for the index. */
   #suppress "@azure-tools/typespec-azure-core/no-nullable" "Pre-existing API contract"
+  @removed(Versions.v2026_04_01)
   permissionFilterOption?: SearchIndexPermissionFilterOption | null;
 
   /** A value indicating whether Purview is enabled for the index. */
   #suppress "@azure-tools/typespec-azure-core/no-nullable" "Pre-existing API contract"
+  @removed(Versions.v2026_04_01)
+  purviewEnabled?: boolean | null;
+
+  /** The ETag of the index. */
+  @encodedName("application/json", "@odata.etag")
+  eTag?: string;
+}
+
+/** Represents a search index definition, which describes the fields and search behavior of an index. */
+model SearchIndexResponse {
+  /** The name of the index. */
+  name: string;
+
+  /** The description of the index. */
+  description?: string;
+
+  /** The fields of the index. */
+  fields?: SearchField[];
+
+  /** The scoring profiles for the index. */
+  scoringProfiles?: ScoringProfile[];
+
+  /** The name of the scoring profile to use if none is specified in the query. If this property is not set and no scoring profile is specified in the query, then default scoring (tf-idf) will be used. */
+  defaultScoringProfile?: string;
+
+  /** Options to control Cross-Origin Resource Sharing (CORS) for the index. */
+  #suppress "@azure-tools/typespec-azure-core/no-nullable" "Pre-existing API contract"
+  corsOptions?: CorsOptions | null;
+
+  /** The suggesters for the index. */
+  suggesters?: SearchSuggester[];
+
+  /** The analyzers for the index. */
+  analyzers?: LexicalAnalyzer[];
+
+  /** The tokenizers for the index. */
+  tokenizers?: LexicalTokenizer[];
+
+  /** The token filters for the index. */
+  tokenFilters?: TokenFilter[];
+
+  /** The character filters for the index. */
+  charFilters?: CharFilter[];
+
+  /** The normalizers for the index. */
+  normalizers?: LexicalNormalizer[];
+
+  /** A description of an encryption key that you create in Azure Key Vault. This key is used to provide an additional level of encryption-at-rest for your data when you want full assurance that no one, not even Microsoft, can decrypt your data. Once you have encrypted your data, it will always remain encrypted. The search service will ignore attempts to set this property to null. You can change this property as needed if you want to rotate your encryption key; Your data will be unaffected. Encryption with customer-managed keys is not available for free search services, and is only available for paid services created on or after January 1, 2019. */
+  #suppress "@azure-tools/typespec-azure-core/no-nullable" "Pre-existing API contract"
+  encryptionKey?: SearchResourceEncryptionKey | null;
+
+  /** The type of similarity algorithm to be used when scoring and ranking the documents matching a search query. The similarity algorithm can only be defined at index creation time and cannot be modified on existing indexes. If null, the ClassicSimilarity algorithm is used. */
+  similarity?: SimilarityAlgorithm;
+
+  /** Defines parameters for a search index that influence semantic capabilities. */
+  #suppress "@azure-tools/typespec-azure-core/no-nullable" "Pre-existing API contract"
+  semantic?: SemanticSearch | null;
+
+  /** Contains configuration options related to vector search. */
+  #suppress "@azure-tools/typespec-azure-core/no-nullable" "Pre-existing API contract"
+  vectorSearch?: VectorSearch | null;
+
+  /** A value indicating whether permission filtering is enabled for the index. */
+  #suppress "@azure-tools/typespec-azure-core/no-nullable" "Pre-existing API contract"
+  @removed(Versions.v2026_04_01)
+  permissionFilterOption?: SearchIndexPermissionFilterOption | null;
+
+  /** A value indicating whether Purview is enabled for the index. */
+  #suppress "@azure-tools/typespec-azure-core/no-nullable" "Pre-existing API contract"
+  @removed(Versions.v2026_04_01)
   purviewEnabled?: boolean | null;
 
   /** The ETag of the index. */
@@ -3986,10 +4071,12 @@ model SearchField {
 
   /** A value indicating whether the field should be used as a permission filter. */
   #suppress "@azure-tools/typespec-azure-core/no-nullable" "Pre-existing API contract"
+  @removed(Versions.v2026_04_01)
   permissionFilter?: PermissionFilter | null;
 
   /** A value indicating whether the field contains sensitivity label information. */
   #suppress "@azure-tools/typespec-azure-core/no-nullable" "Pre-existing API contract"
+  @removed(Versions.v2026_04_01)
   sensitivityLabel?: boolean | null;
 
   /** The name of the analyzer to use for the field. This option can be used only with searchable fields and it can't be set together with either searchAnalyzer or indexAnalyzer. Once the analyzer is chosen, it cannot be changed for the field. Must be null for complex fields. */
@@ -4180,6 +4267,7 @@ model SemanticConfiguration {
   rankingOrder?: RankingOrder | null;
 
   /** Determines which semantic or query rewrite models to use during model flighting/upgrades. */
+  @removed(Versions.v2026_04_01)
   flightingOptIn?: boolean = false;
 }
 
@@ -4292,6 +4380,14 @@ model ListIndexesResult {
   value: SearchIndex[];
 }
 
+/** Response from a List Indexes request. If successful, it includes the full definitions of all indexes. */
+model ListIndexesSelectedResult {
+  /** The indexes in the Search service. */
+  @pageItems
+  @visibility(Lifecycle.Read)
+  value: SearchIndexResponse[];
+}
+
 /** Statistics for a given index. Statistics are collected periodically and are not guaranteed to always be up-to-date. */
 model GetIndexStatisticsResult {
   /** The number of documents in the index. */
@@ -4387,9 +4483,11 @@ model KnowledgeBase {
   models?: KnowledgeBaseModel[];
 
   /** The retrieval reasoning effort configuration. */
+  @removed(Versions.v2026_04_01)
   retrievalReasoningEffort?: KnowledgeRetrievalReasoningEffort;
 
   /** The output mode for the knowledge base. */
+  @removed(Versions.v2026_04_01)
   outputMode?: KnowledgeRetrievalOutputMode;
 
   /** The ETag of the knowledge base. */
@@ -4404,9 +4502,11 @@ model KnowledgeBase {
   description?: string;
 
   /** Instructions considered by the knowledge base when developing query plan. */
+  @removed(Versions.v2026_04_01)
   retrievalInstructions?: string;
 
   /** Instructions considered by the knowledge base when generating answers. */
+  @removed(Versions.v2026_04_01)
   answerInstructions?: string;
 }
 
@@ -4502,6 +4602,7 @@ union KnowledgeSourceKind {
   AzureBlob: "azureBlob",
 
   /** A knowledge source that reads data from indexed SharePoint. */
+  @removed(Versions.v2026_04_01)
   IndexedSharePoint: "indexedSharePoint",
 
   /** A knowledge source that reads data from indexed OneLake. */
@@ -4511,6 +4612,7 @@ union KnowledgeSourceKind {
   Web: "web",
 
   /** A knowledge source that reads data from remote SharePoint. */
+  @removed(Versions.v2026_04_01)
   RemoteSharePoint: "remoteSharePoint",
 }
 
@@ -4577,6 +4679,7 @@ model AzureBlobKnowledgeSourceParameters {
 }
 
 /** Configuration for SharePoint knowledge source. */
+@removed(Versions.v2026_04_01)
 model IndexedSharePointKnowledgeSource extends KnowledgeSource {
   kind: KnowledgeSourceKind.IndexedSharePoint;
 
@@ -4585,6 +4688,7 @@ model IndexedSharePointKnowledgeSource extends KnowledgeSource {
 }
 
 /** Parameters for SharePoint knowledge source. */
+@removed(Versions.v2026_04_01)
 model IndexedSharePointKnowledgeSourceParameters {
   /** SharePoint connection string with format: SharePointOnlineEndpoint=[SharePoint site url];ApplicationId=[Azure AD App ID];ApplicationSecret=[Azure AD App client secret];TenantId=[SharePoint site tenant id] */
   connectionString: string;
@@ -4666,6 +4770,7 @@ model WebKnowledgeSourceDomain {
 }
 
 /** Configuration for remote SharePoint knowledge source. */
+@removed(Versions.v2026_04_01)
 model RemoteSharePointKnowledgeSource extends KnowledgeSource {
   kind: KnowledgeSourceKind.RemoteSharePoint;
 
@@ -4674,6 +4779,7 @@ model RemoteSharePointKnowledgeSource extends KnowledgeSource {
 }
 
 /** Parameters for remote SharePoint knowledge source. */
+@removed(Versions.v2026_04_01)
 model RemoteSharePointKnowledgeSourceParameters {
   /** Keyword Query Language (KQL) expression with queryable SharePoint properties and attributes to scope the retrieval before the query runs. */
   filterExpression?: string;
@@ -4706,6 +4812,7 @@ model SearchServiceStatistics {
   limits: SearchServiceLimits;
 
   /** Service level indexer runtime consumption. */
+  @removed(Versions.v2026_04_01)
   indexersRuntime: ServiceIndexersRuntime;
 }
 
@@ -4816,7 +4923,7 @@ model PatternAnalyzer extends LexicalAnalyzer {
   /** A regular expression pattern to match token separators. Default is an expression that matches one or more non-word characters. */
   pattern?: string = "\\W+";
 
-  /** Regular expression flags. */
+  /** Regular expression flags, specified as a '|' separated string of RegexFlags values. */
   #suppress "@azure-tools/typespec-azure-core/known-encoding" "Pre-existing API contract"
   #suppress "@azure-tools/typespec-autorest/unknown-format" "Pre-existing API contract"
   @encode(ArrayEncoding.pipeDelimited)
@@ -5002,8 +5109,11 @@ model PatternTokenizer extends LexicalTokenizer {
   /** A regular expression pattern to match token separators. Default is an expression that matches one or more non-word characters. */
   pattern?: string = "\\W+";
 
-  /** Regular expression flags. */
-  flags?: RegexFlags;
+  /** Regular expression flags, specified as a '|' separated string of RegexFlags values. */
+  #suppress "@azure-tools/typespec-azure-core/known-encoding" "Pre-existing API contract"
+  #suppress "@azure-tools/typespec-autorest/unknown-format" "Pre-existing API contract"
+  @encode(ArrayEncoding.pipeDelimited)
+  flags?: RegexFlags[];
 
   /** The zero-based ordinal of the matching group in the regular expression pattern to extract into tokens. Use -1 if you want to use the entire pattern to split the input into tokens, irrespective of matching groups. Default is -1. */
   group?: int32 = -1;
@@ -5619,6 +5729,7 @@ model WebApiVectorizerParameters {
 
 /** Clears the identity property of a datasource. */
 #suppress "@azure-tools/typespec-azure-core/casing-style" "Maintain compatibility with existing models."
+@removed(Versions.v2026_04_01)
 model AIServicesVisionVectorizer extends VectorSearchVectorizer {
   /** Contains the parameters specific to AI Services Vision embedding vectorization. */
   aiServicesVisionParameters?: AIServicesVisionParameters;
@@ -5839,7 +5950,7 @@ model AIServicesAccountKey extends CognitiveServicesAccount {
   /** The key used to provision the Azure AI service resource attached to a skillset. */
   key: string;
 
-  /** The subdomain url for the corresponding AI Service. */
+  /** The subdomain/Azure AI Services endpoint url for the corresponding AI Service. */
   subdomainUrl: string;
 
   /** A URI fragment specifying the type of Azure AI service resource attached to a skillset. */
@@ -5854,7 +5965,7 @@ model AIServicesAccountIdentity extends CognitiveServicesAccount {
   #suppress "@azure-tools/typespec-azure-core/no-nullable" "Pre-existing API contract"
   identity?: SearchIndexerDataIdentity | null;
 
-  /** The subdomain url for the corresponding AI Service. */
+  /** The subdomain/Azure AI Services endpoint url for the corresponding AI Service. */
   subdomainUrl: string;
 
   /** A URI fragment specifying the type of Azure AI service resource attached to a skillset. */
@@ -6022,42 +6133,11 @@ model MergeSkill extends SearchIndexerSkill {
   `@odata.type`: "#Microsoft.Skills.Text.MergeSkill";
 }
 
-/** This skill is deprecated. Use the V3.EntityRecognitionSkill instead. */
-model EntityRecognitionSkill extends SearchIndexerSkill {
-  /** A list of entity categories that should be extracted. */
-  categories?: EntityCategory[];
-
-  /** A value indicating which language code to use. Default is `en`. */
-  defaultLanguageCode?: EntityRecognitionSkillLanguage;
-
-  /** Determines whether or not to include entities which are well known but don't conform to a pre-defined type. If this configuration is not set (default), set to null or set to false, entities which don't conform to one of the pre-defined types will not be surfaced. */
-  #suppress "@azure-tools/typespec-azure-core/no-nullable" "Pre-existing API contract"
-  includeTypelessEntities?: boolean | null;
-
-  /** A value between 0 and 1 that be used to only include entities whose confidence score is greater than the value specified. If not set (default), or if explicitly set to null, all entities will be included. */
-  #suppress "@azure-tools/typespec-azure-core/no-nullable" "Pre-existing API contract"
-  minimumPrecision?: float64 | null;
-
-  /** A URI fragment specifying the type of skill. */
-  #suppress "@azure-tools/typespec-azure-core/casing-style" "Maintain compatibility with existing models."
-  `@odata.type`: "#Microsoft.Skills.Text.EntityRecognitionSkill";
-}
-
-/** This skill is deprecated. Use the V3.SentimentSkill instead. */
-model SentimentSkill extends SearchIndexerSkill {
-  /** A value indicating which language code to use. Default is `en`. */
-  defaultLanguageCode?: SentimentSkillLanguage;
-
-  /** A URI fragment specifying the type of skill. */
-  #suppress "@azure-tools/typespec-azure-core/casing-style" "Maintain compatibility with existing models."
-  `@odata.type`: "#Microsoft.Skills.Text.SentimentSkill";
-}
-
 /** Using the Text Analytics API, evaluates unstructured text and for each record, provides sentiment labels (such as "negative", "neutral" and "positive") based on the highest confidence score found by the service at a sentence and document-level. */
 model SentimentSkillV3 extends SearchIndexerSkill {
   /** A value indicating which language code to use. Default is `en`. */
   #suppress "@azure-tools/typespec-azure-core/no-nullable" "Pre-existing API contract"
-  defaultLanguageCode?: string | null;
+  defaultLanguageCode?: SentimentSkillLanguage | null;
 
   /** If set to true, the skill output will include information from Text Analytics for opinion mining, namely targets (nouns or verbs) and their associated assessment (adjective) in the text. Default is false. */
   includeOpinionMining?: boolean = false;
@@ -6094,11 +6174,11 @@ model EntityLinkingSkill extends SearchIndexerSkill {
 /** Using the Text Analytics API, extracts entities of different types from text. */
 model EntityRecognitionSkillV3 extends SearchIndexerSkill {
   /** A list of entity categories that should be extracted. */
-  categories?: string[];
+  categories?: EntityCategory[];
 
   /** A value indicating which language code to use. Default is `en`. */
   #suppress "@azure-tools/typespec-azure-core/no-nullable" "Pre-existing API contract"
-  defaultLanguageCode?: string | null;
+  defaultLanguageCode?: EntityRecognitionSkillLanguage | null;
 
   /** A value between 0 and 1 that be used to only include entities whose confidence score is greater than the value specified. If not set (default), or if explicitly set to null, all entities will be included. */
   @minValue(0)
@@ -6171,11 +6251,13 @@ model SplitSkill extends SearchIndexerSkill {
 
   /** Only applies if textSplitMode is set to pages. There are two possible values. The choice of the values will decide the length (maximumPageLength and pageOverlapLength) measurement. The default is 'characters', which means the length will be measured by character. */
   #suppress "@azure-tools/typespec-azure-core/no-nullable" "Pre-existing API contract"
+  @removed(Versions.v2026_04_01)
   unit?: SplitSkillUnit | null;
 
   /** Only applies if the unit is set to azureOpenAITokens. If specified, the splitSkill will use these parameters when performing the tokenization. The parameters are a valid 'encoderModelName' and an optional 'allowedSpecialTokens' property. */
   #suppress "@azure-tools/typespec-azure-core/no-nullable" "Pre-existing API contract"
   #suppress "@azure-tools/typespec-azure-core/casing-style" "Maintain compatibility with existing models."
+  @removed(Versions.v2026_04_01)
   azureOpenAITokenizerParameters?: AzureOpenAITokenizerParameters | null;
 
   /** A URI fragment specifying the type of skill. */
@@ -6325,6 +6407,7 @@ model WebApiSkill extends SearchIndexerSkill {
 }
 
 /** The AML skill allows you to extend AI enrichment with a custom Azure Machine Learning (AML) model. Once an AML model is trained and deployed, an AML skill integrates it into AI enrichment. */
+@removed(Versions.v2026_04_01)
 model AzureMachineLearningSkill extends SearchIndexerSkill {
   /** (Required for no authentication or key authentication) The scoring URI of the AML service to which the JSON payload will be sent. Only the https URI scheme is allowed. */
   #suppress "@azure-tools/typespec-azure-core/no-nullable" "Pre-existing API contract"
@@ -6370,6 +6453,7 @@ model AzureOpenAIEmbeddingSkill extends SearchIndexerSkill {
 }
 
 /** Allows you to generate a vector embedding for a given image or text input using the Azure AI Services Vision Vectorize API. */
+@removed(Versions.v2026_04_01)
 model VisionVectorizeSkill extends SearchIndexerSkill {
   /** The version of the model to use when calling the AI Services Vision service. It will default to the latest available when not specified. */
   #suppress "@azure-tools/typespec-azure-core/no-nullable" "Pre-existing API contract"
@@ -6509,24 +6593,30 @@ model ChatCompletionSkill extends SearchIndexerSkill {
   uri: string;
 
   /** The headers required to make the http request. */
+  @removed(Versions.v2026_04_01)
   httpHeaders?: WebApiHttpHeaders;
 
   /** The method for the http request. */
+  @removed(Versions.v2026_04_01)
   httpMethod?: string;
 
   /** The desired timeout for the request. Default is 30 seconds. */
+  @removed(Versions.v2026_04_01)
   timeout?: duration;
 
   /** The desired batch size which indicates number of documents. */
   #suppress "@azure-tools/typespec-azure-core/no-nullable" "Pre-existing API contract"
+  @removed(Versions.v2026_04_01)
   batchSize?: int32 | null;
 
   /** If set, the number of parallel calls that can be made to the Web API. */
   #suppress "@azure-tools/typespec-azure-core/no-nullable" "Pre-existing API contract"
+  @removed(Versions.v2026_04_01)
   degreeOfParallelism?: int32 | null;
 
   /** Applies to custom skills that connect to external code in an Azure function or some other application that provides the transformations. This value should be the application ID created for the function or app when it was registered with Azure Active Directory. When specified, the custom skill connects to the function or app using a managed ID (either system or user-assigned) of the search service and the access token of the function or app, using this value as the resource id for creating the scope of the access token. */
   #suppress "@azure-tools/typespec-azure-core/no-nullable" "Pre-existing API contract"
+  @removed(Versions.v2026_04_01)
   authResourceId?: string | null;
 
   /** The user-assigned managed identity used for outbound connections. If an authResourceId is provided and it's not specified, the system-assigned managed identity is used. On updates to the indexer, if the identity is unspecified, the value remains unchanged. If set to "none", the value of this property is cleared. */

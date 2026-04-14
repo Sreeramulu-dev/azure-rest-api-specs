@@ -229,9 +229,11 @@ class TspconfigEmitterOptionsSubRuleBase extends TspconfigSubRuleBase {
       };
     }
     // Handle various path formats with different prefixes
-    // Format 1: {output-dir}/{service-dir}/azure-mgmt-advisor
-    // Format 2: {service-dir}/azure-mgmt-advisor where service-dir might include {output-dir}
-    // Format 3: {output-dir}/{service-dir}/azadmin/settings where we need to validate "azadmin/settings"
+    // Format 1: {output-dir}/{service-dir}/azure-mgmt-advisor          → azure-mgmt-advisor
+    // Format 2: {service-dir}/azure-mgmt-advisor                       → azure-mgmt-advisor
+    // Format 3: {output-dir}/{service-dir}/azadmin/settings            → azadmin/settings
+    // Format 4: {output-dir}/sdk/dellstorage/{xxxx}                    → {xxxx} (resolved below)
+    // Format 5: {output-dir}/sdk/recoveryservices-backup/Azure.Foo     → Azure.Foo
 
     let extractedPath: string;
     if (!actualValue.includes("/")) {
@@ -241,9 +243,19 @@ class TspconfigEmitterOptionsSubRuleBase extends TspconfigSubRuleBase {
       const filteredParts = pathParts.filter(
         (part) => !(part === "{output-dir}" || part === "{service-dir}"),
       );
-      extractedPath = filteredParts.join("/");
-    }
 
+      // If the last part is a variable (e.g., {namespace}, {package-name}), use just that (Format 4)
+      const lastPart = filteredParts[filteredParts.length - 1];
+      if (lastPart.startsWith("{") && lastPart.endsWith("}")) {
+        extractedPath = lastPart;
+      } else {
+        // Strip a leading sdk/<service-name>/ segment if present (Format 5)
+        if (filteredParts.length >= 3 && filteredParts[0] === "sdk") {
+          filteredParts.splice(0, 2);
+        }
+        extractedPath = filteredParts.join("/");
+      }
+    }
     // Resolve variables in the extracted path
     return this.resolveVariables(extractedPath, config);
   }
@@ -256,13 +268,25 @@ class TspconfigEmitterOptionsSubRuleBase extends TspconfigSubRuleBase {
         `Please add "options.${this.emitterName}.${this.keyToValidate}" with expected value "${this.expectedValue}"`,
       );
 
-    const actualValue = option as unknown as undefined | string | boolean;
+    let actualValue = option as unknown as undefined | string | boolean;
+
+    // Resolve variables if the value is a string
+    if (typeof actualValue === "string" && actualValue.includes("{")) {
+      const { resolved, error } = this.resolveVariables(actualValue, config);
+      if (error) {
+        return this.createFailedResult(
+          error,
+          `Please define the variable in your configuration or use a direct value`,
+        );
+      }
+      actualValue = resolved;
+    }
+
     if (!this.validateValue(actualValue, this.expectedValue))
       return this.createFailedResult(
         `The value of options.${this.emitterName}.${this.keyToValidate} "${actualValue}" does not match "${this.expectedValue}"`,
         `Please update the value of "options.${this.emitterName}.${this.keyToValidate}" to match "${this.expectedValue}"`,
       );
-
     return { success: true };
   }
 
@@ -708,6 +732,51 @@ export class TspConfigPythonDpEmitterOutputDirSubRule extends TspconfigEmitterOp
   }
 }
 
+// ----- CSharp sub rules -----
+export class TspConfigCsharpDpEmitterOutputDirSubRule extends TspconfigEmitterOptionsEmitterOutputDirSubRuleBase {
+  constructor() {
+    super("@azure-typespec/http-client-csharp", "emitter-output-dir", new RegExp(/^Azure\./));
+  }
+  protected skip(_: any, folder: string) {
+    return skipForManagementPlane(folder);
+  }
+}
+
+export class TspConfigCsharpDpNamespaceSubRule extends TspconfigEmitterOptionsSubRuleBase {
+  constructor() {
+    super("@azure-typespec/http-client-csharp", "namespace", new RegExp(/^Azure\./));
+  }
+  protected skip(_: any, folder: string) {
+    return skipForManagementPlane(folder);
+  }
+}
+
+export class TspConfigCsharpMgmtEmitterOutputDirSubRule extends TspconfigEmitterOptionsEmitterOutputDirSubRuleBase {
+  constructor() {
+    super(
+      "@azure-typespec/http-client-csharp-mgmt",
+      "emitter-output-dir",
+      new RegExp(/^Azure\.ResourceManager\./),
+    );
+  }
+  protected skip(_: any, folder: string) {
+    return skipForDataPlane(folder);
+  }
+}
+
+export class TspConfigCsharpMgmtNamespaceSubRule extends TspconfigEmitterOptionsSubRuleBase {
+  constructor() {
+    super(
+      "@azure-typespec/http-client-csharp-mgmt",
+      "namespace",
+      new RegExp(/^Azure\.ResourceManager\./),
+    );
+  }
+  protected skip(_: any, folder: string) {
+    return skipForDataPlane(folder);
+  }
+}
+
 /**
  * Required rules: When a tspconfig.yaml exists, any applicable rule in the requiredRules array
  * that fails validation will cause the entire SdkTspConfigValidationRule to fail. For example,
@@ -749,6 +818,10 @@ export const requiredRules = [
  * validation failures will affect the overall validation result.
  */
 export const optionalRules: TspconfigEmitterOptionsSubRuleBase[] = [
+  new TspConfigCsharpDpEmitterOutputDirSubRule(),
+  new TspConfigCsharpDpNamespaceSubRule(),
+  new TspConfigCsharpMgmtNamespaceSubRule(),
+  new TspConfigCsharpMgmtEmitterOutputDirSubRule(),
   new TspConfigGoDpServiceDirMatchPatternSubRule(),
   new TspConfigGoDpEmitterOutputDirMatchPatternSubRule(),
   new TspConfigGoDpModuleMatchPatternSubRule(),
