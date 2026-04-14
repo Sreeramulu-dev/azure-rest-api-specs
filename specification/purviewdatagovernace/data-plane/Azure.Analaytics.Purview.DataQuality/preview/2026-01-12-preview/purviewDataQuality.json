@@ -580,8 +580,8 @@
           }
         },
         "x-ms-examples": {
-          "AssetLevelDQ_List": {
-            "$ref": "./examples/AssetLevelDQ_List.json"
+          "DQ_AssetLevel_List_Assets": {
+            "$ref": "./examples/DQ_AssetLevel_List_Assets.json"
           }
         }
       },
@@ -640,8 +640,8 @@
           }
         },
         "x-ms-examples": {
-          "AssetLevelDQ_Create": {
-            "$ref": "./examples/AssetLevelDQ_Create.json"
+          "DQ_AssetLevel_Create_Asset": {
+            "$ref": "./examples/DQ_AssetLevel_Create_Asset.json"
           }
         }
       }
@@ -700,8 +700,8 @@
           }
         },
         "x-ms-examples": {
-          "AssetLevelDQ_Get": {
-            "$ref": "./examples/AssetLevelDQ_Get.json"
+          "DQ_AssetLevel_Get_Asset": {
+            "$ref": "./examples/DQ_AssetLevel_Get_Asset.json"
           }
         }
       },
@@ -755,8 +755,8 @@
           }
         },
         "x-ms-examples": {
-          "AssetLevelDQ_Delete": {
-            "$ref": "./examples/AssetLevelDQ_Delete.json"
+          "DQ_AssetLevel_Delete_Assest": {
+            "$ref": "./examples/DQ_AssetLevel_Delete_Assest.json"
           }
         }
       }
@@ -964,8 +964,8 @@
           }
         },
         "x-ms-examples": {
-          "AssetLevelDQ_Clone": {
-            "$ref": "./examples/AssetLevelDQ_Clone.json"
+          "DQ_AssetLevel_Clone_Assest": {
+            "$ref": "./examples/DQ_AssetLevel_Clone_Assest.json"
           }
         }
       }

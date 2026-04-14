@@ -12,7 +12,7 @@
       "isGovernedAssetFlag": true
     }
   },
-  "title": "AssetLevelDQ_Create",
+  "title": "DQ_AssetLevel_Create_Asset",
   "responses": {
     "201": {
       "body": {

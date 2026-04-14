@@ -1662,7 +1662,11 @@ namespace PurviewDataQuality {
   @tag("DQ Assets")
   @extension(
     "x-ms-examples",
-    #{ AssetLevelDQ_Create: #{ $ref: "./examples/AssetLevelDQ_Create.json" } }
+    #{
+      DQ_AssetLevel_Create_Asset: #{
+        $ref: "./examples/DQ_AssetLevel_Create_Asset.json",
+      },
+    }
   )
   @doc("Creates a DQ asset within a business domain. Data product is specified as optional query parameter.")
   op createDQAssetForAssetDQ is RpcOperation<
@@ -1703,7 +1707,11 @@ namespace PurviewDataQuality {
   @tag("DQ Assets")
   @extension(
     "x-ms-examples",
-    #{ AssetLevelDQ_Get: #{ $ref: "./examples/AssetLevelDQ_Get.json" } }
+    #{
+      DQ_AssetLevel_Get_Asset: #{
+        $ref: "./examples/DQ_AssetLevel_Get_Asset.json",
+      },
+    }
   )
   @doc("Retrieves a DQ asset by identifier within a business domain. Data product is specified as optional query parameter.")
   op getDQAssetForAssetDQ is RpcOperation<
@@ -1741,7 +1749,11 @@ namespace PurviewDataQuality {
   @tag("DQ Assets")
   @extension(
     "x-ms-examples",
-    #{ AssetLevelDQ_Delete: #{ $ref: "./examples/AssetLevelDQ_Delete.json" } }
+    #{
+      DQ_AssetLevel_Delete_Assest: #{
+        $ref: "./examples/DQ_AssetLevel_Delete_Assest.json",
+      },
+    }
   )
   @doc("Deletes a DQ asset within a business domain. Data product is specified as optional query parameter.")
   op deleteDQAssetForAssetDQ is RpcOperation<
@@ -1778,7 +1790,11 @@ namespace PurviewDataQuality {
   @tag("DQ Assets")
   @extension(
     "x-ms-examples",
-    #{ AssetLevelDQ_List: #{ $ref: "./examples/AssetLevelDQ_List.json" } }
+    #{
+      DQ_AssetLevel_List_Assets: #{
+        $ref: "./examples/DQ_AssetLevel_List_Assets.json",
+      },
+    }
   )
   @doc("Retrieves DQ assets for a business domain with pagination. Data product is specified as optional query parameter.")
   op getDQAssetsPaginationForAssetDQ is RpcOperation<
@@ -1858,7 +1874,11 @@ namespace PurviewDataQuality {
   @tag("DQ Assets")
   @extension(
     "x-ms-examples",
-    #{ AssetLevelDQ_Clone: #{ $ref: "./examples/AssetLevelDQ_Clone.json" } }
+    #{
+      DQ_AssetLevel_Clone_Assest: #{
+        $ref: "./examples/DQ_AssetLevel_Clone_Assest.json",
+      },
+    }
   )
   @doc("Submits a clone job for a DQ asset. Data product is specified as optional query parameter.")
   op cloneDQAssetForAssetDQ is RpcOperation<

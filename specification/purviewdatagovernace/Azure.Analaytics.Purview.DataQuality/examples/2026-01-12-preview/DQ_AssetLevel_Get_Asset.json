@@ -6,7 +6,7 @@
     "dataProductId": "00000000-0000-0000-0000-000000000000",
     "assetId": "82f21bcc-ae71-40b9-88ab-dae3f64fd711"
   },
-  "title": "AssetLevelDQ_Get",
+  "title": "DQ_AssetLevel_Get_Asset",
   "responses": {
     "200": {
       "body": {
